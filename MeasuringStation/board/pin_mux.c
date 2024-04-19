@@ -13,6 +13,9 @@ package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
 processor_version: 15.0.1
 board: LPCXpresso55S69
+pin_labels:
+- {pin_num: '81', pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, label: 'U6[11]/P20[5]/FC3_SPI_MISO', identifier: LCD_DC}
+- {pin_num: '73', pin_signal: PIO1_28/FC7_SCK/SD0_D5/CT_INP2/PLU_IN3, label: 'P17[18]/P20[2]/PLU_IN3/GPIO', identifier: LCD_RST}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -32,6 +35,8 @@ void BOARD_InitBootPins(void)
 {
     BOARD_InitDEBUG_UARTPins();
     MWM_InitPins();
+    Board_InitBMP280Pins();
+    BOARD_InitPMODPins();
 }
 
 /* clang-format off */
@@ -865,6 +870,199 @@ void MWM_InitPins(void)
                           * : Enable Digital mode.
                           * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO1_24_DIGIMODE_DIGITAL));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+Board_InitBMP280Pins:
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '71', peripheral: FLEXCOMM1, signal: CTS_SDA_SSEL0, pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13,
+    egp: i2c, i2cfilter: highspeedmode}
+  - {pin_num: '72', peripheral: FLEXCOMM1, signal: RTS_SCL_SSEL1, pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14,
+    egp: i2c, i2cfilter: highspeedmode}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : Board_InitBMP280Pins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void Board_InitBMP280Pins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][13] =
+        ((IOCON->PIO[0][13] &
+          /* Mask bits to zero which are setting */
+          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK | IOCON_PIO_EGP_MASK | IOCON_PIO_I2CFILTER_MASK)))
+
+         /* Selects pin function.
+          * : PORT013 (pin 71) is configured as FC1_CTS_SDA_SSEL0. */
+         | IOCON_PIO_FUNC(PIO0_13_FUNC_ALT1)
+
+         /* Select Digital mode.
+          * : Enable Digital mode.
+          * Digital input is enabled. */
+         | IOCON_PIO_DIGIMODE(PIO0_13_DIGIMODE_DIGITAL)
+
+         /* Switch between GPIO mode and I2C mode.
+          * : I2C mode. */
+         | IOCON_PIO_EGP(PIO0_13_EGP_I2C_MODE)
+
+         /* Configures I2C features for standard mode, fast mode, and Fast Mode Plus operation and High-Speed
+          * mode operation.
+          * : I2C 10 ns glitch filter enabled.
+          * Typically used for High-speed mode I2C. */
+         | IOCON_PIO_I2CFILTER(PIO0_13_I2CFILTER_STANDARD_MODE));
+
+    IOCON->PIO[0][14] =
+        ((IOCON->PIO[0][14] &
+          /* Mask bits to zero which are setting */
+          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK | IOCON_PIO_EGP_MASK | IOCON_PIO_I2CFILTER_MASK)))
+
+         /* Selects pin function.
+          * : PORT014 (pin 72) is configured as FC1_RTS_SCL_SSEL1. */
+         | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT1)
+
+         /* Select Digital mode.
+          * : Enable Digital mode.
+          * Digital input is enabled. */
+         | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL)
+
+         /* Switch between GPIO mode and I2C mode.
+          * : I2C mode. */
+         | IOCON_PIO_EGP(PIO0_14_EGP_I2C_MODE)
+
+         /* Configures I2C features for standard mode, fast mode, and Fast Mode Plus operation and High-Speed
+          * mode operation.
+          * : I2C 10 ns glitch filter enabled.
+          * Typically used for High-speed mode I2C. */
+         | IOCON_PIO_I2CFILTER(PIO0_14_I2CFILTER_STANDARD_MODE));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitPMODPins:
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '86', peripheral: FLEXCOMM3, signal: CTS_SDA_SSEL0, pin_signal: PIO0_4/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4}
+  - {pin_num: '83', peripheral: FLEXCOMM3, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3}
+  - {pin_num: '89', peripheral: FLEXCOMM3, signal: SCK, pin_signal: PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6}
+  - {pin_num: '81', peripheral: GPIO, signal: 'PIO0, 2', pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, direction: OUTPUT, mode: inactive}
+  - {pin_num: '73', peripheral: GPIO, signal: 'PIO1, 28', pin_signal: PIO1_28/FC7_SCK/SD0_D5/CT_INP2/PLU_IN3, direction: OUTPUT, gpio_init_state: 'true'}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitPMODPins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void BOARD_InitPMODPins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    /* Enables the clock for the GPIO0 module */
+    CLOCK_EnableClock(kCLOCK_Gpio0);
+
+    /* Enables the clock for the GPIO1 module */
+    CLOCK_EnableClock(kCLOCK_Gpio1);
+
+    gpio_pin_config_t LCD_DC_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO0_2 (pin 81)  */
+    GPIO_PinInit(BOARD_INITPMODPINS_LCD_DC_GPIO, BOARD_INITPMODPINS_LCD_DC_PORT, BOARD_INITPMODPINS_LCD_DC_PIN, &LCD_DC_config);
+
+    gpio_pin_config_t LCD_RST_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PIO1_28 (pin 73)  */
+    GPIO_PinInit(BOARD_INITPMODPINS_LCD_RST_GPIO, BOARD_INITPMODPINS_LCD_RST_PORT, BOARD_INITPMODPINS_LCD_RST_PIN, &LCD_RST_config);
+
+    IOCON->PIO[0][2] = ((IOCON->PIO[0][2] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT02 (pin 81) is configured as PIO0_2. */
+                        | IOCON_PIO_FUNC(PIO0_2_FUNC_ALT0)
+
+                        /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                         * : Inactive.
+                         * Inactive (no pull-down/pull-up resistor enabled). */
+                        | IOCON_PIO_MODE(PIO0_2_MODE_INACTIVE)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_2_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][3] = ((IOCON->PIO[0][3] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT03 (pin 83) is configured as FC3_RXD_SDA_MOSI_DATA. */
+                        | IOCON_PIO_FUNC(PIO0_3_FUNC_ALT1)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_3_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][4] = ((IOCON->PIO[0][4] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT04 (pin 86) is configured as FC3_CTS_SDA_SSEL0. */
+                        | IOCON_PIO_FUNC(0x08u)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_4_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][6] = ((IOCON->PIO[0][6] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT06 (pin 89) is configured as FC3_SCK. */
+                        | IOCON_PIO_FUNC(PIO0_6_FUNC_ALT1)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_6_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][28] = ((IOCON->PIO[1][28] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT128 (pin 73) is configured as PIO1_28. */
+                         | IOCON_PIO_FUNC(PIO1_28_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_28_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF

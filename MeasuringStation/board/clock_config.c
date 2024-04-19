@@ -227,15 +227,21 @@ void BOARD_BootClockPLL100M(void)
 name: BOARD_BootClockPLL150M
 called_from_default_init: true
 outputs:
+- {id: FXCOM1_clock.outFreq, value: 12 MHz}
 - {id: FXCOM2_clock.outFreq, value: 12 MHz}
+- {id: FXCOM3_clock.outFreq, value: 30 MHz}
 - {id: System_clock.outFreq, value: 150 MHz}
 settings:
 - {id: PLL0_Mode, value: Normal}
 - {id: ENABLE_CLKIN_ENA, value: Enabled}
 - {id: ENABLE_SYSTEM_CLK_OUT, value: Enabled}
+- {id: SYSCON.FCCLKSEL1.sel, value: ANACTRL.fro_12m_clk}
 - {id: SYSCON.FCCLKSEL2.sel, value: ANACTRL.fro_12m_clk}
+- {id: SYSCON.FCCLKSEL3.sel, value: SYSCON.PLL0DIV}
+- {id: SYSCON.FRGCTRL3_DIV.scale, value: '256', locked: true}
 - {id: SYSCON.MAINCLKSELB.sel, value: SYSCON.PLL0_BYPASS}
 - {id: SYSCON.PLL0CLKSEL.sel, value: SYSCON.CLK_IN_EN}
+- {id: SYSCON.PLL0DIV.scale, value: '5'}
 - {id: SYSCON.PLL0M_MULT.scale, value: '150', locked: true}
 - {id: SYSCON.PLL0N_DIV.scale, value: '8', locked: true}
 - {id: SYSCON.PLL0_PDEC.scale, value: '2', locked: true}
@@ -285,15 +291,29 @@ void BOARD_BootClockPLL150M(void)
 
     /*!< Set up dividers */
     #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg1, 0U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #else
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg1, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #endif
+    #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
       CLOCK_SetClkDiv(kCLOCK_DivFlexFrg2, 0U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
     #else
       CLOCK_SetClkDiv(kCLOCK_DivFlexFrg2, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
     #endif
+    #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg3, 0U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #else
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg3, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #endif
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivPll0Clk, 0U, true);               /*!< Reset PLL0DIV divider counter and halt it */
+    CLOCK_SetClkDiv(kCLOCK_DivPll0Clk, 5U, false);         /*!< Set PLL0DIV divider to value 5 */
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kPLL0_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to PLL0 */
+    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1);                 /*!< Switch FLEXCOMM1 to FRO12M */
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM2);                 /*!< Switch FLEXCOMM2 to FRO12M */
+    CLOCK_AttachClk(kPLL0_DIV_to_FLEXCOMM3);                 /*!< Switch FLEXCOMM3 to PLL0_DIV */
 
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKPLL150M_CORE_CLOCK;

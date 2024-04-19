@@ -402,6 +402,110 @@ void BOARD_InitACCELPins(void); /* Function assigned for the Cortex-M33 (Core #0
  */
 void MWM_InitPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_13_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Switch between GPIO mode and I2C mode.: I2C mode. */
+#define PIO0_13_EGP_I2C_MODE 0x00u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_13_FUNC_ALT1 0x01u
+/*!
+ * @brief
+ * Configures I2C features for standard mode, fast mode, and Fast Mode Plus operation and High-Speed mode
+ * operation.
+ * : I2C 10 ns glitch filter enabled.
+ * Typically used for High-speed mode I2C.
+ */
+#define PIO0_13_I2CFILTER_STANDARD_MODE 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_14_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Switch between GPIO mode and I2C mode.: I2C mode. */
+#define PIO0_14_EGP_I2C_MODE 0x00u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_14_FUNC_ALT1 0x01u
+/*!
+ * @brief
+ * Configures I2C features for standard mode, fast mode, and Fast Mode Plus operation and High-Speed mode
+ * operation.
+ * : I2C 10 ns glitch filter enabled.
+ * Typically used for High-speed mode I2C.
+ */
+#define PIO0_14_I2CFILTER_STANDARD_MODE 0x01u
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void Board_InitBMP280Pins(void); /* Function assigned for the Cortex-M33 (Core #0) */
+
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_2_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO0_2_FUNC_ALT0 0x00u
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO0_2_MODE_INACTIVE 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_3_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_3_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_4_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_6_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_6_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_28_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_28_FUNC_ALT0 0x00u
+
+/*! @name PIO0_2 (number 81), U6[11]/P20[5]/FC3_SPI_MISO
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPMODPINS_LCD_DC_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPMODPINS_LCD_DC_GPIO_PIN_MASK (1U << 2U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPMODPINS_LCD_DC_PORT 0U                  /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPMODPINS_LCD_DC_PIN 2U                   /*!<@brief PORT pin number */
+#define BOARD_INITPMODPINS_LCD_DC_PIN_MASK (1U << 2U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
+
+/*! @name PIO1_28 (number 73), P17[18]/P20[2]/PLU_IN3/GPIO
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPMODPINS_LCD_RST_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPMODPINS_LCD_RST_GPIO_PIN_MASK (1U << 28U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPMODPINS_LCD_RST_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPMODPINS_LCD_RST_PIN 28U                   /*!<@brief PORT pin number */
+#define BOARD_INITPMODPINS_LCD_RST_PIN_MASK (1U << 28U)      /*!<@brief PORT pin mask */
+                                                             /* @} */
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_InitPMODPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
+
 #if defined(__cplusplus)
 }
 #endif
